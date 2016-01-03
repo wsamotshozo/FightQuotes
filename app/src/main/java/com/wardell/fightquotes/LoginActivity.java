@@ -2,6 +2,7 @@ package com.wardell.fightquotes;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,35 +57,67 @@ public class LoginActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    private boolean isEmailValid(String email) {
+        return email.contains("@");
+    }
+
+    private boolean isPasswordValid(String password) {
+        return password.length() > 4;
+    }
+    public boolean formValidated()
+    {
+        String emailText = email.getText().toString();
+        String passwordText = password.getText().toString();
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(passwordText) && !isPasswordValid(passwordText)) {
+            password.setError(getString(R.string.error_invalid_password));
+            return false;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(emailText)) {
+            email.setError(getString(R.string.error_field_required));
+            return false;
+        } else if (!isEmailValid(emailText)) {
+            email.setError(getString(R.string.error_invalid_email));
+            return false;
+        }
+        return true;
+    }
     public void signIn(View view)
     {
-        firebaseRef.authWithPassword(email.getText().toString(), password.getText().toString(), new Firebase.AuthResultHandler() {
-            @Override
-            public void onAuthenticated(AuthData authData) {
-                Log.v(TAG, "User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
-            }
+        if(formValidated()) {
+            firebaseRef.authWithPassword(email.getText().toString(), password.getText().toString(), new Firebase.AuthResultHandler() {
+                @Override
+                public void onAuthenticated(AuthData authData) {
+                    Log.v(TAG, "User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
+                }
 
-            @Override
-            public void onAuthenticationError(FirebaseError firebaseError) {
-                // there was an error
-                Log.e(TAG,"error signing in ++ " + firebaseError.getMessage());
-                Log.e(TAG,"error signing in ++ " + firebaseError.getDetails());
-            }
-        });
+                @Override
+                public void onAuthenticationError(FirebaseError firebaseError) {
+                    // there was an error
+                    Log.e(TAG, "error signing in ++ " + firebaseError.getMessage());
+                    Log.e(TAG, "error signing in ++ " + firebaseError.getDetails());
+                }
+            });
+        }
     }
     public void register(View view)
     {
-        firebaseRef.createUser(email.getText().toString(), password.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
-            @Override
-            public void onSuccess(Map<String, Object> result) {
-                Log.v(TAG,"Successfully created user account with uid: " + result.get("uid"));
-            }
-            @Override
-            public void onError(FirebaseError firebaseError) {
-                // there was an error
-                Log.e(TAG,"Error creating user ++ " + firebaseError.getMessage());
-                Log.e(TAG,"Error creating user ++ " + firebaseError.getDetails());
-            }
-        });
+        if(formValidated()) {
+            firebaseRef.createUser(email.getText().toString(), password.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
+                @Override
+                public void onSuccess(Map<String, Object> result) {
+                    Log.v(TAG, "Successfully created user account with uid: " + result.get("uid"));
+                }
+
+                @Override
+                public void onError(FirebaseError firebaseError) {
+                    // there was an error
+                    Log.e(TAG, "Error creating user ++ " + firebaseError.getMessage());
+                    Log.e(TAG, "Error creating user ++ " + firebaseError.getDetails());
+                }
+            });
+        }
     }
 }
