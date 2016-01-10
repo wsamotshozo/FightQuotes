@@ -1,5 +1,7 @@
 package com.wardell.fightquotes;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,7 +16,6 @@ import android.widget.EditText;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.wardell.fightquotes.utils.Constants;
 
 import java.util.Map;
 
@@ -24,12 +25,14 @@ public class LoginActivity extends AppCompatActivity {
     private Button sigin, register;
     private Firebase firebaseRef;
     private static final String TAG = "Login";
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Firebase.setAndroidContext(this);
+        context = this;
         firebaseRef = new Firebase("https://glaring-fire-7430.firebaseio.com/");
         email = (AutoCompleteTextView)findViewById(R.id.email);
         password = (EditText)findViewById(R.id.password);
@@ -91,6 +94,8 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onAuthenticated(AuthData authData) {
                     Log.v(TAG, "User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
+                    Intent intent = new Intent(context,QuoteListActivity.class);
+                    startActivity(intent);
                 }
 
                 @Override
