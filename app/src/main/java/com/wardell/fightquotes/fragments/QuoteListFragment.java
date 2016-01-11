@@ -1,5 +1,7 @@
 package com.wardell.fightquotes.fragments;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -20,10 +22,12 @@ import com.firebase.client.ValueEventListener;
 import com.wardell.fightquotes.R;
 import com.wardell.fightquotes.adapters.QuoteListAdapter;
 
+import java.util.HashMap;
+
 /**
  * Created by wardell on 1/9/16.
  */
-public class QuoteListFragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class QuoteListFragment extends ListFragment implements AdapterView.OnItemClickListener , AdapterView.OnItemLongClickListener{
     private Firebase quoteRef;
     private static final String TAG = "Quote List Fragment";
     private Context context;
@@ -52,6 +56,8 @@ public class QuoteListFragment extends ListFragment implements AdapterView.OnIte
             }
         });
         getListView().setOnItemClickListener(this);
+        this.getListView().setLongClickable(true);
+        getListView().setOnItemLongClickListener(this);
 
 
     }
@@ -63,9 +69,31 @@ public class QuoteListFragment extends ListFragment implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag("fragment_edit_quote");
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
 
-        Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT)
-                .show();
+        QuoteFragment editQuoteDialog = new QuoteFragment();
+        editQuoteDialog.setQuote(quoteListAdapter.getItem(position).toString(), quoteListAdapter.getWebHashKey(position));
+        editQuoteDialog.show(manager, "fragment_edit_quote");
 
     }
+    public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag("fragment_delete_quote");
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+
+        QuoteDeleteFragment deleteQuoteDialog = new QuoteDeleteFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("quote",quoteListAdapter.getItem(position).toString());
+        bundle.putString("webHashKey",quoteListAdapter.getWebHashKey(position));
+        deleteQuoteDialog.setArguments(bundle);
+        deleteQuoteDialog.show(manager, "fragment_delete_quote");
+        return true;
+    }
+
 }

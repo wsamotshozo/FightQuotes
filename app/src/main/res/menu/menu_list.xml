@@ -9,4 +9,9 @@
         android:icon="@android:drawable/ic_input_add"
         android:title="@string/action_add_quote"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_add_quote"
+        android:icon="@android:drawable/ic_input_add"
+        android:title="@string/action_add_quote"
+        app:showAsAction="always"/>
 </menu>

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
@@ -103,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                     // there was an error
                     Log.e(TAG, "error signing in ++ " + firebaseError.getMessage());
                     Log.e(TAG, "error signing in ++ " + firebaseError.getDetails());
+                    Toast.makeText(context, "Error signing in " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -114,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Map<String, Object> result) {
                     Log.v(TAG, "Successfully created user account with uid: " + result.get("uid"));
+                    Toast.makeText(context, "Successfully created user account", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -121,8 +124,10 @@ public class LoginActivity extends AppCompatActivity {
                     // there was an error
                     Log.e(TAG, "Error creating user ++ " + firebaseError.getMessage());
                     Log.e(TAG, "Error creating user ++ " + firebaseError.getDetails());
+                    Toast.makeText(context, "Error creating user " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
+
         }
     }
 }

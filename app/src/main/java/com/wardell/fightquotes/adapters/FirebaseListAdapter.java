@@ -38,6 +38,9 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<T> mModels;
     private List<String> mKeys;
+
+
+
     private ChildEventListener mListener;
 
 
@@ -176,6 +179,9 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
         return view;
     }
 
+    public List<String> getmKeys() {
+        return mKeys;
+    }
     /**
      * Each time the data at the given Firebase location changes, this method will be called for each item that needs
      * to be displayed. The arguments correspond to the mLayout and mModelClass given to the constructor of this class.

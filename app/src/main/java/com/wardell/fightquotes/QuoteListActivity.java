@@ -14,10 +14,13 @@ import android.widget.Toast;
 import com.firebase.client.Firebase;
 import com.wardell.fightquotes.fragments.QuoteFragment;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class QuoteListActivity extends AppCompatActivity implements QuoteFragment.QuoteListener {
     private Firebase quoteRef;
-    private ListView listView;
-    private ListAdapter myAdapter;
+    //private ListView listView;
+    //private ListAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +59,23 @@ public class QuoteListActivity extends AppCompatActivity implements QuoteFragmen
                 manager.beginTransaction().remove(frag).commit();
             }
 
-            QuoteFragment editNameDialog = new QuoteFragment();
-            editNameDialog.show(manager, "fragment_add_quote");
+            QuoteFragment addQuoteDialog = new QuoteFragment();
+            addQuoteDialog.show(manager, "fragment_add_quote");
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onFinishUserDialog(String quote_Input) {
+    public void onFinishQuoteDialog(String quote_Input) {
         quoteRef.push().setValue(quote_Input);
         Toast.makeText(this,  quote_Input + " was added to the list of quotes", Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onFinishEditQuoteDialog(String quote_Input, String id){
+        Map<String, Object> quote = new HashMap<String, Object>();
+        quote.put(id,quote_Input);
+        quoteRef.updateChildren(quote);
+        Toast.makeText(this,  quote_Input + " was edited", Toast.LENGTH_SHORT).show();
     }
 }
