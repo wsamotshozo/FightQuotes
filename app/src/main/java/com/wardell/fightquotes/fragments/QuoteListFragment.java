@@ -3,7 +3,12 @@ package com.wardell.fightquotes.fragments;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListFragment;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,8 +24,10 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.wardell.fightquotes.QuoteListActivity;
 import com.wardell.fightquotes.R;
 import com.wardell.fightquotes.adapters.QuoteListAdapter;
+import com.wardell.fightquotes.utils.Constants;
 
 import java.util.HashMap;
 
@@ -46,6 +53,7 @@ public class QuoteListFragment extends ListFragment implements AdapterView.OnIte
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
         final ListView listView = getListView();
         quoteListAdapter = new QuoteListAdapter(quoteRef,getActivity(),R.layout.listview_quote_item);
+        Constants.quoteListAdapter = quoteListAdapter;
 
         listView.setAdapter(quoteListAdapter);
         quoteListAdapter.registerDataSetObserver(new DataSetObserver() {
@@ -95,5 +103,6 @@ public class QuoteListFragment extends ListFragment implements AdapterView.OnIte
         deleteQuoteDialog.show(manager, "fragment_delete_quote");
         return true;
     }
+
 
 }

@@ -10,8 +10,8 @@
         android:title="@string/action_add_quote"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/action_add_quote"
-        android:icon="@android:drawable/ic_input_add"
-        android:title="@string/action_add_quote"
+        android:id="@+id/action_show_quote"
+        android:icon="@mipmap/eye"
+        android:title="show_quote"
         app:showAsAction="always"/>
 </menu>
